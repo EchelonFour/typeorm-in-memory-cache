@@ -8,8 +8,8 @@
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Frank Fenton",
+  "license": "MIT",
   "devDependencies": {
     "typeorm": "^0.2.25",
     "typescript": "^3.9.3"
