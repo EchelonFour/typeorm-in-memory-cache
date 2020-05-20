@@ -1,30 +1,50 @@
 import type { QueryResultCache } from 'typeorm/cache/QueryResultCache'
 import type { QueryResultCacheOptions } from 'typeorm/cache/QueryResultCacheOptions'
-import type { QueryRunner } from 'typeorm'
+
+import NodeCache = require('node-cache')
 
 export default class InMemoryCacheProvider implements QueryResultCache {
+
+  private cache: NodeCache;
+
+  constructor(userCache?: NodeCache) {
+    if (userCache) {
+      this.cache = userCache
+    } else {
+      this.cache = new NodeCache()
+    }
+  }
   connect(): Promise<void> {
-    throw new Error("Method not implemented.")
+    return Promise.resolve()
   }
   disconnect(): Promise<void> {
-    throw new Error("Method not implemented.")
+    return Promise.resolve()
   }
-  synchronize(queryRunner?: QueryRunner | undefined): Promise<void> {
-    throw new Error("Method not implemented.")
+  synchronize(): Promise<void> { 
+    return Promise.resolve()
   }
-  getFromCache(options: QueryResultCacheOptions, queryRunner?: QueryRunner | undefined): Promise<QueryResultCacheOptions | undefined> {
-    throw new Error("Method not implemented.")
+  
+  async getFromCache(options: QueryResultCacheOptions): Promise<QueryResultCacheOptions | undefined> {
+    return this.cache.get(options.identifier || options.query)
   }
-  storeInCache(options: QueryResultCacheOptions, savedCache: QueryResultCacheOptions | undefined, queryRunner?: QueryRunner | undefined): Promise<void> {
-    throw new Error("Method not implemented.")
+
+  async storeInCache(options: QueryResultCacheOptions, savedCache: QueryResultCacheOptions | undefined): Promise<void> {
+    this.cache.set(options.identifier || options.query, options, options.duration / 1000)
   }
+
   isExpired(savedCache: QueryResultCacheOptions): boolean {
-    throw new Error("Method not implemented.")
+    return (savedCache.time! + savedCache.duration) < new Date().getTime()
   }
-  clear(queryRunner?: QueryRunner | undefined): Promise<void> {
-    throw new Error("Method not implemented.")
+
+  async clear(): Promise<void> {
+    this.cache.flushAll()
   }
-  remove(identifiers: string[], queryRunner?: QueryRunner | undefined): Promise<void> {
-    throw new Error("Method not implemented.")
+
+  async remove(identifiers: string[]): Promise<void> {
+    this.cache.del(identifiers)
+  }
+
+  getStatistics() {
+    return this.cache.getStats()
   }
 }
