@@ -1,2 +1,4 @@
 *.ts
 .node-version
+.vscode/
+tsconfig.json
