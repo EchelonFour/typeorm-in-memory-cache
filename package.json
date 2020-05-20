@@ -2,13 +2,19 @@
   "name": "typeorm-in-memory-cache",
   "version": "1.0.0",
   "description": "Provides an in-memory cache for typeorm",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "typeorm": "^0.2.25",
     "typescript": "^3.9.3"
+  },
+  "dependencies": {
+    "node-cache": "^5.1.0"
   }
 }
